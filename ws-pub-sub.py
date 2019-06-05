@@ -4,7 +4,9 @@ import tornado.web
 import tornado.websocket
 import tornado.httpserver
 import tornado.ioloop
+import tornado.options
 
+tornado.options.define("port", default=4888, type=int, help="run server on the given port.")
 
 class PubHandler(tornado.websocket.WebSocketHandler):
     def open(self):
@@ -50,8 +52,9 @@ class Application(tornado.web.Application):
 
 
 if __name__ == '__main__':
+    tornado.options.parse_command_line()
     clients = {}
     ws_app = Application()
     server = tornado.httpserver.HTTPServer(ws_app)
-    server.listen(4888)
+    server.listen(tornado.options.options.port)
     tornado.ioloop.IOLoop.instance().start()
