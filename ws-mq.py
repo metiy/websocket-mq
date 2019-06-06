@@ -6,7 +6,9 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 
-tornado.options.define("port", default=4888, type=int, help="run server on the given port.")
+tornado.options.define("port", default=8433,         type=str, help="run server on the given port.")
+tornado.options.define("cert", default='server.crt', type=str, help="certificate file.")
+tornado.options.define("key",  default='server.key', type=str, help="private key file.")
 
 class PubHandler(tornado.websocket.WebSocketHandler):
     def open(self):
@@ -55,6 +57,9 @@ if __name__ == '__main__':
     tornado.options.parse_command_line()
     clients = {}
     ws_app = Application()
-    server = tornado.httpserver.HTTPServer(ws_app)
+    server = tornado.httpserver.HTTPServer(ws_app , ssl_options={
+           "certfile": tornado.options.options.cert ,
+           "keyfile":  tornado.options.options.key } )
     server.listen(tornado.options.options.port)
+
     tornado.ioloop.IOLoop.instance().start()
