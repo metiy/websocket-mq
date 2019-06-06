@@ -13,7 +13,7 @@ tornado.options.define("topic",    default='', type=str, help="kafka topic.")
 if __name__ == '__main__':
     tornado.options.parse_command_line()
 
-    ws = websocket.create_connection(tornado.options.options.mqserver)
+    ws = websocket.create_connection(tornado.options.options.mqserver , sslopt={"cert_reqs": ssl.CERT_NONE , "check_hostname": False })
 
     consumer = KafkaConsumer(tornado.options.options.topic , group_id=tornado.options.options.group , bootstrap_servers=tornado.options.options.kserver)
 
